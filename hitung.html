@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Hitung Tools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  padding-bottom: 60px; /* ruang navbar bawah */
+}
+
+/* NAVBAR BAWAH */
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  border-top: 1px solid #fff;
+  background: #000;
+}
+
+nav button {
+  flex: 1;
+  padding: 14px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-right: 1px solid #fff;
+  cursor: pointer;
+}
+
+nav button:last-child {
+  border-right: none;
+}
+
+nav button.active {
+  background: #111;
+}
+
+/* SECTION */
+.section {
+  display: none;
+  padding: 20px;
+}
+
+.section.active {
+  display: block;
+}
+
+.desc {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 15px;
+  border-left: 3px solid #fff;
+  padding-left: 10px;
+}
+
+/* Kalkulator */
+.calc {
+  width: 240px;
+  margin: auto;
+  border: 1px solid #fff;
+  padding: 10px;
+}
+
+.calc input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  text-align: right;
+}
+
+.calc button {
+  width: 25%;
+  padding: 12px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+/* Stopwatch */
+.stopwatch {
+  text-align: center;
+  border: 1px solid #fff;
+  padding: 20px;
+  max-width: 300px;
+  margin: auto;
+}
+
+.stopwatch button {
+  margin: 5px;
+  padding: 10px 16px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+/* Jam Dunia */
+.clock {
+  border: 1px solid #fff;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- KALKULATOR -->
+<div id="calc" class="section active">
+  <div class="desc">
+    Gunakan kalkulator ini untuk perhitungan cepat seperti tambah, kurang,
+    kali, dan bagi. Cocok untuk kebutuhan sehari-hari. (ngacak dikit gak ngaruh bre, yang penting fugsi) 
+  </div>
+
+  <div class="calc">
+    <input id="display" disabled>
+    <div>
+      <button onclick="add('7')">7</button>
+      <button onclick="add('8')">8</button>
+      <button onclick="add('9')">9</button>
+      <button onclick="add('/')">÷</button>
+
+      <button onclick="add('4')">4</button>
+      <button onclick="add('5')">5</button>
+      <button onclick="add('6')">6</button>
+      <button onclick="add('*')">×</button>
+
+      <button onclick="add('1')">1</button>
+      <button onclick="add('2')">2</button>
+      <button onclick="add('3')">3</button>
+      <button onclick="add('-')">−</button>
+
+      <button onclick="add('0')">0</button>
+      <button onclick="clearDisp()">C</button>
+      <button onclick="calc()">=</button>
+      <button onclick="add('+')">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- STOPWATCH -->
+<div id="stopwatch" class="section">
+  <div class="desc">
+    Stopwatch ini digunakan untuk menghitung waktu berjalan.
+    Cocok untuk olahraga, coding, atau tes durasi aktivitas.
+  </div>
+
+  <div class="stopwatch">
+    <h2 id="time">00:00:00</h2>
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="reset()">Reset</button>
+  </div>
+</div>
+
+<!-- JAM DUNIA -->
+<div id="worldclock" class="section">
+  <div class="desc">
+    Menampilkan waktu real-time dari berbagai negara di dunia
+    menggunakan zona waktu resmi.
+  </div>
+
+  <div class="clock" id="id"></div>
+  <div class="clock" id="jp"></div>
+  <div class="clock" id="ru"></div>
+  <div class="clock" id="my"></div>
+  <div class="clock" id="sa"></div>
+  <div class="clock" id="us"></div>
+  <div class="clock" id="eg"></div>
+  <div class="clock" id="vn"></div>
+  <div class="clock" id="au"></div>
+  <div class="clock" id="uk"></div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <button class="active" onclick="showSection('calc')">Kalkulator</button>
+  <button onclick="showSection('stopwatch')">Stopwatch</button>
+  <button onclick="showSection('worldclock')">Jam Dunia</button>
+</nav>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+/* Kalkulator */
+function add(val) { display.value += val; }
+function clearDisp() { display.value = ''; }
+function calc() { display.value = eval(display.value); }
+
+/* Stopwatch */
+let timer, sec = 0;
+function start() {
+  if (!timer) {
+    timer = setInterval(() => {
+      sec++;
+      let h = String(Math.floor(sec / 3600)).padStart(2,'0');
+      let m = String(Math.floor((sec % 3600) / 60)).padStart(2,'0');
+      let s = String(sec % 60).padStart(2,'0');
+      time.textContent = `${h}:${m}:${s}`;
+    }, 1000);
+  }
+}
+function stop() { clearInterval(timer); timer = null; }
+function reset() { stop(); sec = 0; time.textContent = "00:00:00"; }
+
+/* Jam Dunia */
+function updateClock(id, zone, label) {
+  document.getElementById(id).textContent =
+    label + " : " +
+    new Intl.DateTimeFormat('id-ID', {
+      timeZone: zone,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).format(new Date());
+}
+
+setInterval(() => {
+  updateClock('id','Asia/Jakarta','Indonesia');
+  updateClock('jp','Asia/Tokyo','Jepang');
+  updateClock('ru','Europe/Moscow','Rusia');
+  updateClock('my','Asia/Kuala_Lumpur','Malaysia');
+  updateClock('sa','Asia/Riyadh','Arab Saudi');
+  updateClock('us','America/New_York','Amerika Serikat');
+  updateClock('eg','Africa/Cairo','Mesir');
+  updateClock('vn','Asia/Ho_Chi_Minh','Vietnam');
+  updateClock('au','Australia/Sydney','Australia');
+  updateClock('uk','Europe/London','Inggris');
+}, 1000);
+</script>
+
+</body>
+</html>
